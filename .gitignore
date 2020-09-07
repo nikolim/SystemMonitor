@@ -4,3 +4,7 @@ settings.json
 *.o
 build/*
 *.json
+
+.vscode/
+Notes.md
+system_monitor_ws.code-workspace
