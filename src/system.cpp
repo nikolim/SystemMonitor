@@ -51,3 +51,10 @@ int System::TotalProcesses() {
 long int System::UpTime() { 
   return LinuxParser::UpTime(); 
   }
+
+void System::updateProcesses() {
+  vector<int> pids = LinuxParser::Pids();
+  for (int pid : pids) {}
+  processes_
+
+}
