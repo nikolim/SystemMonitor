@@ -62,4 +62,5 @@ void System::updateProcesses() {
     process.Update();
     processes_.push_back(process);
   }
+  std::sort(processes_.begin(), processes_.end()); 
 }
