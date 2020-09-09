@@ -21,7 +21,9 @@ Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
-  return processes_; }
+  System::updateProcesses();
+  return processes_; 
+}
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() { 
@@ -54,7 +56,10 @@ long int System::UpTime() {
 
 void System::updateProcesses() {
   vector<int> pids = LinuxParser::Pids();
-  for (int pid : pids) {}
-  processes_
-
+  processes_.clear();
+  for (int pid : pids) {
+    Process process(pid); 
+    process.Update();
+    processes_.push_back(process);
+  }
 }

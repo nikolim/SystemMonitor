@@ -143,7 +143,7 @@ int LinuxParser::TotalProcesses() {
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { 
-    std::string line, key, value;
+  std::string line, key, value;
   int runningProcesses;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
@@ -174,7 +174,38 @@ string LinuxParser::Uid(int pid [[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::User(int pid) {
+
+  //Get Uid of process
+  std::string line, key, value, Uid, Uname, tmp, tmpId, tmpName;
+  std::ifstream filestream1(kProcDirectory + std::to_string(pid) +kStatusFilename);
+  if (filestream1.is_open()) {
+    while (std::getline(filestream1, line)) {
+      std::istringstream linestream(line);
+      linestream >> key >> value;
+      if (key == "Uid:") {
+        Uid = value;
+        break;
+      }
+    }
+  }
+
+  //Get Name of Uid 
+  std::ifstream filestream2(kPasswordPath);
+  if (filestream2.is_open()) {
+    while (std::getline(filestream2, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');  // replace ':' by ' '
+      std::istringstream linestream(line);
+      linestream >> tmpName >> tmp >> tmpId;
+      if (tmpId ==Uid) {
+        Uname = tmpName;
+        break;
+      }
+    }
+  }
+
+  return Uname; 
+  }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
