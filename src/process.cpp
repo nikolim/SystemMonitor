@@ -35,15 +35,15 @@ string Process::User() { return user_; }
 long int Process::UpTime() { return upTime_; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const {
   // Using RAM for comparision between different processes
-  return a.ram_ < ram_;
+  // return std::stoi(a.ram_) < std::stoi(ram_);
+  return a.cpuUtilization_ < cpuUtilization_;
 }
 
 void Process::Update() {
   user_ = LinuxParser::User(pid_);
-  cpuUtilization_ = 0.5;
+  cpuUtilization_ = LinuxParser::CpuUtilization(pid_);
   upTime_ = LinuxParser::UpTime(pid_);
   command_ = LinuxParser::Command(pid_);
   ram_ = LinuxParser::Ram(pid_);
