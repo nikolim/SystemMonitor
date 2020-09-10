@@ -36,10 +36,10 @@ long int Process::UpTime() { return upTime_; }
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
   // Using RAM for comparision between different processes
-  return std::stoi(a.ram_) < std::stoi(ram_);
+  //return std::stoi(a.ram_) < std::stoi(ram_);
 
   // Using CPU for comparision between different processes
-  // return a.cpuUtilization_ < cpuUtilization_;
+  return a.cpuUtilization_ < cpuUtilization_;
 }
 
 void Process::Update() {
