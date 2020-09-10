@@ -20,12 +20,16 @@ string Format::ElapsedTime(long seconds) {
   min = floor(seconds / 60);
   sec = seconds - (min * 60);
 
-  assert(min < 60);
-  assert(sec < 60);
-
   hours_str = hours < 10 ? ("0" + to_string(hours)) : to_string(hours);
   min_str = min < 10 ? ("0" + to_string(min)) : to_string(min);
   sec_str = sec < 10 ? ("0" + to_string(sec)) : to_string(sec);
 
   return hours_str + ":" + min_str + ":" + sec_str;
+}
+
+// Helper function to convert Kilobytes into Megabytes
+string Format::ConvertRam(string kilobytesStr) {
+  int kilobytes = std::stoi(kilobytesStr);
+  int megabytes = (kilobytes / 1024);
+  return to_string(megabytes);
 }

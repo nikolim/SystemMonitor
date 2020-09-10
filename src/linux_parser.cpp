@@ -1,4 +1,5 @@
 #include "linux_parser.h"
+#include "format.h"
 
 #include <dirent.h>
 #include <unistd.h>
@@ -104,46 +105,23 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return CPU utilization
-float LinuxParser::CpuUtilization(int pid) {
-  long utime, stime, cutime, cstime, starttime;
-
-  long uptime = LinuxParser::UpTime();
-  long hertz = sysconf(_SC_CLK_TCK);
-
-  std::string line, tmp, upTimeStr;
+vector<long> LinuxParser::CpuUtilization(int pid) {
+  vector<long> cpuValues;
+  std::string line, tmp;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatFilename);
   if (filestream.is_open()) {
-    int counter = 1;
+    int c = 1;
     std::getline(filestream, line);
     std::istringstream line_stream(line);
-    while (getline(line_stream, tmp, ' ') && counter < 23) {
-      switch (counter) {
-        case 14:
-          utime = (std::stod(tmp));
-          break;
-        case 15:
-          stime = (std::stod(tmp));
-          break;
-        case 16:
-          cutime = (std::stod(tmp));
-          break;
-        case 17:
-          cstime = (std::stod(tmp));
-          break;
-        case 22:
-          starttime = (std::stod(tmp));
-          break;
+    while (getline(line_stream, tmp, ' ') && c < 23) {
+      if (c == 14 || c == 15 || c == 16 || c == 17 || c == 22) {
+        cpuValues.push_back(std::stod(tmp));
       }
-      counter++;
+      c++;
     }
   }
-
-  float total_time = utime + stime + cutime + cstime;
-  float seconds = uptime - (starttime / hertz);
-  float cpu_usage = (total_time / hertz) / seconds;
-
-  return cpu_usage;
+  return cpuValues;
 }
 
 // TODO: Read and return the total number of processes
@@ -210,14 +188,7 @@ string LinuxParser::Ram(int pid) {
       }
     }
   }
-  return LinuxParser::ConvertRam(value);
-}
-
-// Helper function to convert Kilobytes into Megabytes
-string LinuxParser::ConvertRam(string kilobytesStr) {
-  int kilobytes = std::stoi(kilobytesStr);
-  int megabytes = (kilobytes / 1000);
-  return to_string(megabytes);
+  return Format::ConvertRam(value);
 }
 
 // TODO: Read and return the user ID associated with a process

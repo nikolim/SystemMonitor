@@ -19,7 +19,24 @@ Process::Process(int pid) { pid_ = pid; }
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return cpuUtilization_; }
+float Process::CpuUtilization() { 
+
+  long uptime = LinuxParser::UpTime();
+  long hertz = sysconf(_SC_CLK_TCK);
+
+  vector<long> cpuVec = LinuxParser::CpuUtilization(pid_);
+  long utime = cpuVec[0];
+  long stime = cpuVec[1];
+  long cutime = cpuVec[2];
+  long cstime = cpuVec[3];
+  long starttime = cpuVec[4];
+
+  float total_time = (utime + stime + cutime + cstime) / hertz;
+  float seconds = uptime - (starttime / hertz);
+  float cpu_usage = (total_time / hertz) / seconds ;
+
+  return cpu_usage; 
+  }
 
 // TODO: Return the command that generated this process
 string Process::Command() { return command_; }
@@ -43,9 +60,13 @@ bool Process::operator<(Process const& a) const {
 }
 
 void Process::Update() {
+
+  // Can be read directly from the system
   user_ = LinuxParser::User(pid_);
-  cpuUtilization_ = LinuxParser::CpuUtilization(pid_);
   upTime_ = LinuxParser::UpTime(pid_);
   command_ = LinuxParser::Command(pid_);
   ram_ = LinuxParser::Ram(pid_);
+
+  // Must be calculated
+  cpuUtilization_ = Process::CpuUtilization();
 }

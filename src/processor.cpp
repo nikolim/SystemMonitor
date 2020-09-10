@@ -53,6 +53,7 @@ float Processor::Utilization() {
 
     float cpu_percentage = (totald - idled) / totald;
 
+    Processor::prevVec = Processor::currVec;
     return cpu_percentage;
   }
   Processor::prevVec = Processor::currVec;
