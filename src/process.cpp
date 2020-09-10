@@ -19,8 +19,7 @@ Process::Process(int pid) { pid_ = pid; }
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { 
-
+float Process::CpuUtilization() {
   long uptime = LinuxParser::UpTime();
   long hertz = sysconf(_SC_CLK_TCK);
 
@@ -33,10 +32,10 @@ float Process::CpuUtilization() {
 
   float total_time = (utime + stime + cutime + cstime) / hertz;
   float seconds = uptime - (starttime / hertz);
-  float cpu_usage = (total_time / hertz) / seconds ;
+  float cpu_usage = (total_time / hertz) / seconds;
 
-  return cpu_usage; 
-  }
+  return cpu_usage;
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return command_; }
@@ -53,14 +52,13 @@ long int Process::UpTime() { return upTime_; }
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
   // Using RAM for comparision between different processes
-  //return std::stoi(a.ram_) < std::stoi(ram_);
+  // return std::stoi(a.ram_) < std::stoi(ram_);
 
   // Using CPU for comparision between different processes
   return a.cpuUtilization_ < cpuUtilization_;
 }
 
 void Process::Update() {
-
   // Can be read directly from the system
   user_ = LinuxParser::User(pid_);
   upTime_ = LinuxParser::UpTime(pid_);

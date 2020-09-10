@@ -6,6 +6,6 @@
 namespace Format {
 std::string ElapsedTime(long times);  // TODO: See src/format.cpp
 std::string ConvertRam(std::string kilobytesStr);
-};                                    
+};  // namespace Format
 
 #endif

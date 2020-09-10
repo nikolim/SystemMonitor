@@ -1,5 +1,4 @@
 #include "linux_parser.h"
-#include "format.h"
 
 #include <dirent.h>
 #include <unistd.h>
@@ -7,6 +6,8 @@
 #include <cmath>
 #include <string>
 #include <vector>
+
+#include "format.h"
 
 using std::stof;
 using std::string;
