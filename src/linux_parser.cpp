@@ -103,25 +103,11 @@ long LinuxParser::UpTime() {
   return -1;
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
-
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
-
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
-
 // TODO: Read and return CPU utilization
 float LinuxParser::CpuUtilization(int pid) {
-  long utime, stime, cutime, cstime;
+  long utime, stime, cutime, cstime, starttime;
 
   long uptime = LinuxParser::UpTime();
-  long starttime = LinuxParser::UpTime(pid);
   long hertz = sysconf(_SC_CLK_TCK);
 
   std::string line, tmp, upTimeStr;
@@ -134,34 +120,29 @@ float LinuxParser::CpuUtilization(int pid) {
     while (getline(line_stream, tmp, ' ') && counter < 23) {
       switch (counter) {
         case 14:
-          utime = long(std::stod(tmp) / hertz);
+          utime = (std::stod(tmp));
           break;
         case 15:
-          stime = long(std::stod(tmp) / hertz);
+          stime = (std::stod(tmp));
           break;
         case 16:
-          cutime = long(std::stod(tmp) / hertz);
+          cutime = (std::stod(tmp));
           break;
         case 17:
-          cstime = long(std::stod(tmp) / hertz);
+          cstime = (std::stod(tmp));
           break;
         case 22:
-          starttime = long(std::stod(tmp) / hertz);
+          starttime = (std::stod(tmp));
           break;
       }
       counter++;
     }
   }
 
-  float total_time = 0;
-  float seconds = 0;
-  float cpu_usage = 0.0;
+  float total_time = utime + stime + cutime + cstime;
+  float seconds = uptime - (starttime / hertz);
+  float cpu_usage = (total_time / hertz) / seconds;
 
-  total_time = utime + stime + cutime + cstime;
-  seconds = uptime - starttime;
-  cpu_usage = (total_time / seconds);
-
-  
   return cpu_usage;
 }
 
@@ -204,7 +185,6 @@ int LinuxParser::RunningProcesses() {
 }
 
 // TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid) {
   std::string line, comamnd;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
@@ -216,7 +196,6 @@ string LinuxParser::Command(int pid) {
 }
 
 // TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) {
   std::string line, key, value;
   value = "0";

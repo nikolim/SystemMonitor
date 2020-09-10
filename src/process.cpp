@@ -1,5 +1,4 @@
 #include "process.h"
-#include "linux_parser.h"
 
 #include <unistd.h>
 
@@ -8,13 +7,13 @@
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
+
 using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) {
-  pid_ = pid;
-}
+Process::Process(int pid) { pid_ = pid; }
 
 // TODO: Return this process's ID
 int Process::Pid() { return pid_; }
@@ -37,8 +36,10 @@ long int Process::UpTime() { return upTime_; }
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
   // Using RAM for comparision between different processes
-  // return std::stoi(a.ram_) < std::stoi(ram_);
-  return a.cpuUtilization_ < cpuUtilization_;
+  return std::stoi(a.ram_) < std::stoi(ram_);
+
+  // Using CPU for comparision between different processes
+  // return a.cpuUtilization_ < cpuUtilization_;
 }
 
 void Process::Update() {

@@ -3,15 +3,15 @@
 
 #include <vector>
 
-using std::vector; 
+using std::vector;
 
 class Processor {
  public:
-  float Utilization(); 
-  
+  float Utilization();
+
  private:
-   vector<double> GetCpuVector();
-   vector<double> prevVec;
-   vector<double> currVec;
+  vector<double> GetCpuVector();
+  vector<double> prevVec;
+  vector<double> currVec;
 };
 #endif
